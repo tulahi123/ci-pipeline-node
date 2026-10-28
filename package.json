@@ -1,0 +1,16 @@
+{
+  "name": "ci-pipeline-node",
+  "version": "1.0.0",
+  "description": "Continuous Integration pipeline with automated testing",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "build": "node --check src/server.js && node --check src/app.js && node --check src/productService.js && node --check src/productRepository.js && node --check src/consumer.js",
+    "test": "jest --runInBand",
+    "test:unit": "jest tests/unit --runInBand",
+    "test:integration": "jest tests/integration --runInBand",
+    "test:contract": "jest tests/contract --runInBand",
+    "test:db": "jest tests/database --runInBand",
+    "test:ci": "npm run build && npm test"
+  }
+}

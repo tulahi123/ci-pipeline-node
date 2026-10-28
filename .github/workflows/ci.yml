@@ -1,0 +1,50 @@
+
+name: Node.js Continuous Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build and Automated Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Run API integration tests
+        run: npm run test:integration
+
+      - name: Run Pact contract tests
+        run: npm run test:contract
+
+      - name: Run PostgreSQL Testcontainers tests
+        run: npm run test:db
+
+      - name: Upload Pact contracts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pact-contracts
+          path: pacts/
+          if-no-files-found: ignore
